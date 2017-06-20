@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf8" ?>
+<form  name="sample" action="test.php" novalidate="true">
+	<input type="text" name="firstname">
+		<validation required="true" minlength="3">
+			<errors>
+				<minlength>Too short. %s characters at least</minlength>
+			</errors>
+		</validation>
+	</input>
+	<input type="text" name="lastname">
+		<validation required="true" maxlength="10" minlength="3">
+			<errors>
+				<maxlength>Too long. %s characters is maximum</maxlength>
+				<minlength>Too short. %s characters at least</minlength>
+			</errors>
+		</validation>
+	</input>
+	<input type="text" name="sep-field"></input>
+	<input type="text" />
+	<textarea name="description">
+		<validation required="true" maxlength="200">
+			<errors>
+				<required>Textarea required</required>
+			</errors>
+		</validation>
+	</textarea>
+	<defaults>
+		<validation>
+			<errors>
+				<required>This field is required</required>
+				<maxlength>Default maxlength error</maxlength>
+			</errors>
+		</validation>
+	</defaults>
+</form>

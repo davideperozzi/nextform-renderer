@@ -1,0 +1,24 @@
+{
+    "name": "davideperozzi/nextform-renderer",
+    "description": "Nextform renderer for the nextform php library",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Davide Perozzi",
+            "email": "davide@dorfjungs.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Nextform\\Renderer\\": "src/Nextform/Renderer"
+        }
+    },
+    "minimum-stability": "beta",
+    "require-dev": {
+        "phpunit/phpunit": "~5.1"
+    },
+    "require": {
+        "davideperozzi/nextform-config": "dev-dev as 1.0.1"
+    }
+}
