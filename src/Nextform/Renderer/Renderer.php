@@ -14,7 +14,8 @@ class Renderer
 		__NAMESPACE__ . '\Nodes\InputNode',
 		__NAMESPACE__ . '\Nodes\SelectNode',
 		__NAMESPACE__ . '\Nodes\OptionNode',
-		__NAMESPACE__ . '\Nodes\TextareaNode'
+		__NAMESPACE__ . '\Nodes\TextareaNode',
+		__NAMESPACE__ . '\Nodes\CollectionNode'
 	];
 
 	/**

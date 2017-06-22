@@ -25,6 +25,11 @@ abstract class AbstractNode implements Traversable
 	public static $tag = '';
 
 	/**
+	 * @var boolean
+	 */
+	public static $ignoreSelf = false;
+
+	/**
 	 * @var integer
 	 */
 	protected static $counter = 0;
@@ -56,13 +61,7 @@ abstract class AbstractNode implements Traversable
 		static::$counter++;
 
 		$this->field = $field;
-
-		if ($this->field->hasAttribute('name')) {
-			$this->id = $this->field->getAttribute('name');
-		}
-		else {
-			$this->id = static::generateUid();
-		}
+		$this->id = $field->id;
 	}
 
 	/**
@@ -149,27 +148,33 @@ abstract class AbstractNode implements Traversable
 		$chunk = new NodeChunk($this);
 		$content = $this->field->getContent();
 		$output = '';
-		$tagName = '';
 
-		if ( ! empty(static::$tag)) {
-			$tagName = static::$tag;
+		if (true == static::$ignoreSelf) {
+			$output = $content . NodeChunk::CHILDREN_VAR;
 		}
 		else {
-			$fieldClass = get_class($this->field);
-			$tagName = $fieldClass::$tag;
-		}
+			$tagName = '';
 
-		if (static::$short && count($this->children) == 0 && empty($fieldContent)) {
-			$output .= sprintf('<%s %s />', $tagName, $this->getAttributeList());
-		}
-		else {
-			$output .= sprintf(
-				'<%s %s>%s</%s>',
-				$tagName,
-				$this->getAttributeList(),
-				$content . NodeChunk::CHILDREN_VAR,
-				$tagName
-			);
+			if ( ! empty(static::$tag)) {
+				$tagName = static::$tag;
+			}
+			else {
+				$fieldClass = get_class($this->field);
+				$tagName = $fieldClass::$tag;
+			}
+
+			if (static::$short && count($this->children) == 0 && empty($fieldContent)) {
+				$output .= sprintf('<%s %s />', $tagName, $this->getAttributeList());
+			}
+			else {
+				$output .= sprintf(
+					'<%s %s>%s</%s>',
+					$tagName,
+					$this->getAttributeList(),
+					$content . NodeChunk::CHILDREN_VAR,
+					$tagName
+				);
+			}
 		}
 
 		$chunk->set($output);

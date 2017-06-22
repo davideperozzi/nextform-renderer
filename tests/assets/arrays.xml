@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf8" ?>
+<form  name="sample" action="test.php" novalidate="true">
+	<collection name="test" array="[]">
+		<input type="checkbox" name="test" value="test1" />
+		<input type="checkbox" name="test" value="test2" />
+		<input type="checkbox" name="test" value="test3" />
+	</collection>
+	<defaults>
+		<validation>
+			<errors>
+				<required>This field is required</required>
+			</errors>
+		</validation>
+	</defaults>
+</form>

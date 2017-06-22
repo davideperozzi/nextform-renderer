@@ -30,6 +30,11 @@ $config = new XmlConfig('
 				</errors>
 			</validation>
 		</textarea>
+		<collection name="test" array="[]">
+			<input type="checkbox" name="test" value="test1"/>
+			<input type="checkbox" name="test" value="test2"/>
+			<input type="checkbox" name="test" value="test3"/>
+		</collection>
 		<select name="price">
 			<options>
 				<option value="p1">5€</option>
@@ -127,5 +132,9 @@ $output->group(['submit-sample', 'reset-sample'], function($chunk, $content){
 	$chunk->wrap('<div class="button-wrapper">' . $content . '</div>');
 });
 
-
 $output->flush();
+
+echo "<hr>";
+echo "<pre>";
+
+print_r($_GET);

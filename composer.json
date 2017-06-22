@@ -19,6 +19,6 @@
         "phpunit/phpunit": "~5.1"
     },
     "require": {
-        "davideperozzi/nextform-config": "@beta"
+        "davideperozzi/nextform-config": "dev-dev"
     }
 }
