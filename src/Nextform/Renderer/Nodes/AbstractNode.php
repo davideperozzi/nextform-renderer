@@ -10,11 +10,6 @@ use Nextform\Renderer\Traversable;
 abstract class AbstractNode implements Traversable
 {
 	/**
-	 * @var string
-	 */
-	const UID_PREFIX = 'node_';
-
-	/**
 	 * @var array
 	 */
 	public static $tags = [];
@@ -28,11 +23,6 @@ abstract class AbstractNode implements Traversable
 	 * @var boolean
 	 */
 	public static $ignoreSelf = false;
-
-	/**
-	 * @var integer
-	 */
-	protected static $counter = 0;
 
 	/**
 	 * @var boolean
@@ -58,8 +48,6 @@ abstract class AbstractNode implements Traversable
 	 * @param AbstractField $field
 	 */
 	public function __construct(AbstractField $field) {
-		static::$counter++;
-
 		$this->field = $field;
 		$this->id = $field->id;
 	}
@@ -105,13 +93,6 @@ abstract class AbstractNode implements Traversable
 	 */
 	public function getIterator() {
 		return new \ArrayIterator($this->children);
-	}
-
-	/**
-	 * @return string
-	 */
-	private static function generateUid() {
-		return AbstractNode::UID_PREFIX . static::$counter;
 	}
 
 	/**

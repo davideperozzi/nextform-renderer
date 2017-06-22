@@ -115,22 +115,6 @@ class RenderTest extends TestCase
 	/**
 	 *
 	 */
-	public function testUndefinedIdAutomation() {
-		$output = $this->getOutput();
-		$automated = false;
-
-		$output->each(function($chunk) use (&$automated){
-			if (substr($chunk->id, 0, strlen(AbstractNode::UID_PREFIX)) === AbstractNode::UID_PREFIX) {
-				$automated = true;
-			}
-		});
-
-		$this->assertTrue($automated);
-	}
-
-	/**
-	 *
-	 */
 	public function testChunkSimpleWrap() {
 		$output = $this->getOutput();
 		$output->firstname->wrap('<div class="wrap">%s</div>');
