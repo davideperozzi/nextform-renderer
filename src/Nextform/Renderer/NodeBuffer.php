@@ -68,7 +68,7 @@ class NodeBuffer
 	 * @param callable $callback
 	 * @return self
 	 */
-	public function group($ids, callable $callback, $appendType = NodeBuffer::GROUP_APPEND_LOWEST) {
+	public function group($ids, callable $callback = null, $appendType = NodeBuffer::GROUP_APPEND_LOWEST) {
 		$indices = [];
 		$chunks = $this->get($ids);
 
@@ -83,7 +83,9 @@ class NodeBuffer
 			$appendType == NodeBuffer::GROUP_APPEND_LOWEST ? min($indices) : max($indices)
 		);
 
-		$callback($group, AbstractChunk::CONTENT_VAR);
+		if (is_callable($callback)) {
+			$callback($group, AbstractChunk::CONTENT_VAR);
+		}
 
 		return $this;
 	}

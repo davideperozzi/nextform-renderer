@@ -158,10 +158,33 @@ class RenderTest extends TestCase
 			$chunk->wrap('<div class="group">' . $content . '</div>');
 		});
 
-		$output->get([['firstname', 'lastname']])->each(function($chunk){
+		$output->get([
+			['firstname', 'lastname']
+		])->each(function($chunk){
 			$this->assertEquals(
 				$chunk->get(),
 				'<div class="group"><input type="text" name="firstname" /><input type="text" name="lastname" /></div>'
+			);
+		});
+	}
+
+	/**
+	 *
+	 */
+	public function testChunkValidGroupWrapWithoutCallback() {
+		$output = $this->getOutput();
+
+		$output->group(['firstname', 'lastname']);
+		$output->each(function($chunk, $content){
+			$chunk->wrap('<div>' . $content . '</div>');
+		});
+
+		$output->get([
+			['firstname', 'lastname']
+		])->each(function($chunk){
+			$this->assertEquals(
+				$chunk->get(),
+				'<div><input type="text" name="firstname" /><input type="text" name="lastname" /></div>'
 			);
 		});
 	}
