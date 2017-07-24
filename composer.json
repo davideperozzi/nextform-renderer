@@ -21,12 +21,16 @@
         "brainmaestro/composer-git-hooks": "^2.2"
     },
     "require": {
-        "davideperozzi/nextform-config": "dev-dev"
+        "davideperozzi/nextform-config": "^1.0"
     },
     "extra": {
         "hooks": {
             "pre-commit": "php ./vendor/bin/php-cs-fixer fix --verbose",
             "post-commit": "php ./vendor/bin/phpunit"
         }
+    },
+    "scripts": {
+        "post-install-cmd": "php ./vendor/bin/cghooks add --ignore-lock",
+        "post-update-cmd": "php ./vendor/bin/cghooks update"
     }
 }
