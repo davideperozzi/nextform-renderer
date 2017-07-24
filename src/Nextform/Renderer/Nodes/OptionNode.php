@@ -4,13 +4,13 @@ namespace Nextform\Renderer\Nodes;
 
 class OptionNode extends AbstractNode
 {
-	/**
-	 * @var array
-	 */
-	public static $tags = ['option'];
+    /**
+     * @var array
+     */
+    public static $tags = ['option'];
 
-	/**
-	 * @var boolean
-	 */
-	public static $short = false;
+    /**
+     * @var boolean
+     */
+    public static $short = false;
 }

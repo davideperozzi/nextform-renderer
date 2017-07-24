@@ -4,8 +4,8 @@ namespace Nextform\Renderer\Nodes;
 
 class InputNode extends AbstractNode
 {
-	/**
-	 * @var array
-	 */
-	public static $tags = ['input'];
+    /**
+     * @var array
+     */
+    public static $tags = ['input'];
 }

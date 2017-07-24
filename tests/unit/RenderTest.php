@@ -2,190 +2,185 @@
 
 namespace Nextform\Parser\Tests;
 
-use PHPUnit\Framework\TestCase;
 use Nextform\Config\XmlConfig;
-use Nextform\Renderer\Renderer;
+use Nextform\Renderer\Chunks\NodeChunk;
 use Nextform\Renderer\NodeBuffer;
 use Nextform\Renderer\Nodes\InputNode;
-use Nextform\Renderer\Nodes\AbstractNode;
-use Nextform\Renderer\Chunks\NodeChunk;
-use Nextform\Renderer\Chunks\AbstractChunk;
+use Nextform\Renderer\Renderer;
+use PHPUnit\Framework\TestCase;
 
 class RenderTest extends TestCase
 {
-	/**
-	 * @var integer
-	 */
-	private $maxFields = 5;
+    /**
+     * @var integer
+     */
+    private $maxFields = 5;
 
-	/**
-	 * @var XmlConfig
-	 */
-	private $validConfig = null;
+    /**
+     * @var XmlConfig
+     */
+    private $validConfig = null;
 
-	/**
-	 *
-	 */
-	public function setUp() {
-		$this->validConfig = new XmlConfig(realpath(__DIR__ . '/../assets/sample.xml'));
-	}
 
-	/**
-	 * @return Renderer
-	 */
-	private function getRenderer() {
-		return new Renderer($this->validConfig);
-	}
+    public function setUp()
+    {
+        $this->validConfig = new XmlConfig(realpath(__DIR__ . '/../assets/sample.xml'));
+    }
 
-	/**
-	 * @return NodeBuffer
-	 */
-	private function getOutput() {
-		return $this->getRenderer()->render();
-	}
+    /**
+     * @return Renderer
+     */
+    private function getRenderer()
+    {
+        return new Renderer($this->validConfig);
+    }
 
-	/**
-	 *
-	 */
-	public function testRendererCreate() {
-		$this->assertTrue($this->getRenderer() instanceof Renderer);
-	}
+    /**
+     * @return NodeBuffer
+     */
+    private function getOutput()
+    {
+        return $this->getRenderer()->render();
+    }
 
-	/**
-	 *
-	 */
-	public function testRendererTraversable() {
-		$renderer = $this->getRenderer();
-		$counter = 0;
 
-		$renderer->render()->each(function($chunk) use (&$counter) {
-			$counter++;
-		});
+    public function testRendererCreate()
+    {
+        $this->assertTrue($this->getRenderer() instanceof Renderer);
+    }
 
-		$this->assertEquals($counter, $this->maxFields);
-	}
 
-	/**
-	 * @expectedException Nextform\Renderer\Exception\ChunkNotFoundException
-	 */
-	public function testInalidChunkNodeId() {
-		$output = $this->getOutput();
+    public function testRendererTraversable()
+    {
+        $renderer = $this->getRenderer();
+        $counter = 0;
 
-		$output->invalidchunkid;
-	}
+        $renderer->render()->each(function ($chunk) use (&$counter) {
+            $counter++;
+        });
 
-	/**
-	 *
-	 */
-	public function testValidChunk() {
-		$output = $this->getOutput();
+        $this->assertEquals($counter, $this->maxFields);
+    }
 
-		$this->assertTrue($output->firstname instanceof NodeChunk);
-	}
+    /**
+     * @expectedException Nextform\Renderer\Exception\ChunkNotFoundException
+     */
+    public function testInalidChunkNodeId()
+    {
+        $output = $this->getOutput();
 
-	/**
-	 *
-	 */
-	public function testValidChunkNode() {
-		$output = $this->getOutput();
+        $output->invalidchunkid;
+    }
 
-		$this->assertTrue($output->firstname->node instanceof InputNode);
-	}
 
-	/**
-	 *
-	 */
-	public function testValidChunkNodeId() {
-		$output = $this->getOutput();
+    public function testValidChunk()
+    {
+        $output = $this->getOutput();
 
-		$this->assertEquals($output->firstname->id, 'firstname');
-		$this->assertTrue($output->sepField instanceof NodeChunk);
-	}
+        $this->assertTrue($output->firstname instanceof NodeChunk);
+    }
 
-	/**
-	 *
-	 */
-	public function testChunkType() {
-		$output = $this->getOutput();
 
-		$this->assertEquals($output->description->id, 'description');
-		$this->assertTrue($output->description instanceof NodeChunk);
-	}
+    public function testValidChunkNode()
+    {
+        $output = $this->getOutput();
 
-	/**
-	 *
-	 */
-	public function testChunkSimpleWrap() {
-		$output = $this->getOutput();
-		$output->firstname->wrap('<div class="wrap">%s</div>');
+        $this->assertTrue($output->firstname->node instanceof InputNode);
+    }
 
-		$this->assertEquals(
-			$output->firstname->get(),
-			'<div class="wrap"><input type="text" name="firstname" /></div>'
-		);
 
-		$output->firstname->wrap('<div class="wrap2">%s</div>');
+    public function testValidChunkNodeId()
+    {
+        $output = $this->getOutput();
 
-		$this->assertEquals(
-			$output->firstname->get(),
-			'<div class="wrap2"><div class="wrap"><input type="text" name="firstname" /></div></div>'
-		);
-	}
+        $this->assertEquals($output->firstname->id, 'firstname');
+        $this->assertTrue($output->sepField instanceof NodeChunk);
+    }
 
-	/**
-	 * @expectedException Nextform\Renderer\Exception\ChunkNotFoundException
-	 */
-	public function testChunkInvalidIdGroup() {
-		$output = $this->getOutput();
-		$output->group(['firstname', 'invalidid'], function($chunk){});
-	}
 
-	/**
-	 * @expectedException Nextform\Renderer\Chunks\Exception\NotEnoughChunksException
-	 */
-	public function testChunkTooFewChunksGroup() {
-		$output = $this->getOutput();
-		$output->group(['firstname'], function($chunk){});
-	}
+    public function testChunkType()
+    {
+        $output = $this->getOutput();
 
-	/**
-	 *
-	 */
-	public function testChunkValidGroupWrap() {
-		$output = $this->getOutput();
+        $this->assertEquals($output->description->id, 'description');
+        $this->assertTrue($output->description instanceof NodeChunk);
+    }
 
-		$output->group(['firstname', 'lastname'], function($chunk, $content){
-			$chunk->wrap('<div class="group">' . $content . '</div>');
-		});
 
-		$output->get([
-			['firstname', 'lastname']
-		])->each(function($chunk){
-			$this->assertEquals(
-				$chunk->get(),
-				'<div class="group"><input type="text" name="firstname" /><input type="text" name="lastname" /></div>'
-			);
-		});
-	}
+    public function testChunkSimpleWrap()
+    {
+        $output = $this->getOutput();
+        $output->firstname->wrap('<div class="wrap">%s</div>');
 
-	/**
-	 *
-	 */
-	public function testChunkValidGroupWrapWithoutCallback() {
-		$output = $this->getOutput();
+        $this->assertEquals(
+            $output->firstname->get(),
+            '<div class="wrap"><input type="text" name="firstname" /></div>'
+        );
 
-		$output->group(['firstname', 'lastname']);
-		$output->each(function($chunk, $content){
-			$chunk->wrap('<div>' . $content . '</div>');
-		});
+        $output->firstname->wrap('<div class="wrap2">%s</div>');
 
-		$output->get([
-			['firstname', 'lastname']
-		])->each(function($chunk){
-			$this->assertEquals(
-				$chunk->get(),
-				'<div><input type="text" name="firstname" /><input type="text" name="lastname" /></div>'
-			);
-		});
-	}
+        $this->assertEquals(
+            $output->firstname->get(),
+            '<div class="wrap2"><div class="wrap"><input type="text" name="firstname" /></div></div>'
+        );
+    }
+
+    /**
+     * @expectedException Nextform\Renderer\Exception\ChunkNotFoundException
+     */
+    public function testChunkInvalidIdGroup()
+    {
+        $output = $this->getOutput();
+        $output->group(['firstname', 'invalidid'], function ($chunk) {
+        });
+    }
+
+    /**
+     * @expectedException Nextform\Renderer\Chunks\Exception\NotEnoughChunksException
+     */
+    public function testChunkTooFewChunksGroup()
+    {
+        $output = $this->getOutput();
+        $output->group(['firstname'], function ($chunk) {
+        });
+    }
+
+
+    public function testChunkValidGroupWrap()
+    {
+        $output = $this->getOutput();
+
+        $output->group(['firstname', 'lastname'], function ($chunk, $content) {
+            $chunk->wrap('<div class="group">' . $content . '</div>');
+        });
+
+        $output->get([
+            ['firstname', 'lastname']
+        ])->each(function ($chunk) {
+            $this->assertEquals(
+                $chunk->get(),
+                '<div class="group"><input type="text" name="firstname" /><input type="text" name="lastname" /></div>'
+            );
+        });
+    }
+
+
+    public function testChunkValidGroupWrapWithoutCallback()
+    {
+        $output = $this->getOutput();
+
+        $output->group(['firstname', 'lastname']);
+        $output->each(function ($chunk, $content) {
+            $chunk->wrap('<div>' . $content . '</div>');
+        });
+
+        $output->get([
+            ['firstname', 'lastname']
+        ])->each(function ($chunk) {
+            $this->assertEquals(
+                $chunk->get(),
+                '<div><input type="text" name="firstname" /><input type="text" name="lastname" /></div>'
+            );
+        });
+    }
 }

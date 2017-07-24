@@ -4,13 +4,13 @@ namespace Nextform\Renderer\Nodes;
 
 class FormNode extends AbstractNode
 {
-	/**
-	 * @var array
-	 */
-	public static $tags = ['form'];
+    /**
+     * @var array
+     */
+    public static $tags = ['form'];
 
-	/**
-	 * @var string
-	 */
-	public static $tag = 'form';
+    /**
+     * @var string
+     */
+    public static $tag = 'form';
 }

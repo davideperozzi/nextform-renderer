@@ -16,9 +16,16 @@
     },
     "minimum-stability": "beta",
     "require-dev": {
-        "phpunit/phpunit": "~5.1"
+        "phpunit/phpunit": "~5.1",
+        "brainmaestro/composer-git-hooks": "^2.2"
     },
     "require": {
         "davideperozzi/nextform-config": "dev-dev"
+    },
+    "extra": {
+        "hooks": {
+            "pre-commit": "php ./vendor/bin/php-cs-fixer fix --verbose",
+            "post-commit": "php ./vendor/bin/phpunit"
+        }
     }
 }

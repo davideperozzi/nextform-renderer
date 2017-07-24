@@ -2,9 +2,8 @@
 
 require realpath(__DIR__ . '/../vendor/autoload.php');
 
-use Nextform\Renderer\Renderer;
-use Nextform\Renderer\Chunks\NodeChunk;
 use Nextform\Config\XmlConfig;
+use Nextform\Renderer\Renderer;
 
 $config = new XmlConfig('
 	<form name="sample-form" action="" novalidate="true">
@@ -60,81 +59,81 @@ $config = new XmlConfig('
 
 $renderer = new Renderer($config);
 $output = $renderer->render()->config([
-	'indent' => true,
-	'indent-spaces' => 4,
-	'wrap' => 400,
-	'input-xml' => true,
-	'output-xhtml' => true
+    'indent' => true,
+    'indent-spaces' => 4,
+    'wrap' => 400,
+    'input-xml' => true,
+    'output-xhtml' => true
 ]);
 
-$output->each(function($chunk, $content){
-	$chunk->wrap('<div class="input-wrapper" style="display: inline-block">' . $content . '</div>');
+$output->each(function ($chunk, $content) {
+    $chunk->wrap('<div class="input-wrapper" style="display: inline-block">' . $content . '</div>');
 });
 
 $output->submitSample->wrap('<div class="submit-btn-wrapper" style="display: inline-block">%s</div>');
 
 $output->group(
-	['firstname', 'lastname'],
-	function($chunk, $content){
-		$chunk->wrap('<div class="group-wrapper">' . $content . '</div>');
-	}
+    ['firstname', 'lastname'],
+    function ($chunk, $content) {
+        $chunk->wrap('<div class="group-wrapper">' . $content . '</div>');
+    }
 );
 
 $output->group(
-	['price', 'description'],
-	function($chunk, $content){
-		$chunk->wrap('<div class="group-wrapper">' . $content . '</div>');
-	}
+    ['price', 'description'],
+    function ($chunk, $content) {
+        $chunk->wrap('<div class="group-wrapper">' . $content . '</div>');
+    }
 );
 
 $output->group(
-	[
-		['firstname', 'lastname'],
-		['price', 'description']
-	],
-	function($chunk, $content) {
-		$chunk->wrap('<div class="group-wrapper">' . $content . '</div>');
-	}
+    [
+        ['firstname', 'lastname'],
+        ['price', 'description']
+    ],
+    function ($chunk, $content) {
+        $chunk->wrap('<div class="group-wrapper">' . $content . '</div>');
+    }
 );
 
-$output->group(['test1', 'test2'], function($chunk, $content){
-	$chunk->wrap('<div class="test-wrapper">%s</div>');
+$output->group(['test1', 'test2'], function ($chunk, $content) {
+    $chunk->wrap('<div class="test-wrapper">%s</div>');
 });
 
 $output->group(
-	[
-		[
-			['firstname', 'lastname'],
-			['price', 'description']
-		],
-		['test1', 'test2']
-	],
-	function($chunk, $content) {
-		$chunk->wrap('<div class="whole-wrapper">' . $content . '</div>');
-	}
+    [
+        [
+            ['firstname', 'lastname'],
+            ['price', 'description']
+        ],
+        ['test1', 'test2']
+    ],
+    function ($chunk, $content) {
+        $chunk->wrap('<div class="whole-wrapper">' . $content . '</div>');
+    }
 );
 
 $output->get(
-	[
-		[
-			[
-				['firstname', 'lastname'],
-				['price', 'description']
-			],
-			['test1', 'test2']
-		]
-	]
-)->each(function($chunk, $content){
-	$chunk->wrap('<div class="after-group-wrap">' . $content . '</div>');
+    [
+        [
+            [
+                ['firstname', 'lastname'],
+                ['price', 'description']
+            ],
+            ['test1', 'test2']
+        ]
+    ]
+)->each(function ($chunk, $content) {
+    $chunk->wrap('<div class="after-group-wrap">' . $content . '</div>');
 });
 
-$output->group(['submit-sample', 'reset-sample'], function($chunk, $content){
-	$chunk->wrap('<div class="button-wrapper">' . $content . '</div>');
+$output->group(['submit-sample', 'reset-sample'], function ($chunk, $content) {
+    $chunk->wrap('<div class="button-wrapper">' . $content . '</div>');
 });
 
 $output->flush();
 
-echo "<hr>";
-echo "<pre>";
+echo '<hr>';
+echo '<pre>';
 
 print_r($_GET);
