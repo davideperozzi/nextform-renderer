@@ -186,7 +186,7 @@ class RenderTest extends TestCase
 
     public function testCollectionRendering()
     {
-       $renderer = new Renderer(new XmlConfig('
+        $renderer = new Renderer(new XmlConfig('
             <form>
                 <collection name="test">
                     <input type="checkbox" name="test[]" value="test1"/>
@@ -196,7 +196,7 @@ class RenderTest extends TestCase
             </form>
         ', true));
 
-       $this->assertEquals(
+        $this->assertEquals(
             $renderer->render()->test->get(),
             '<nextform-collection data-name="test"><input type="checkbox" name="test[]" value="test1" /><input type="checkbox" name="test[]" value="test2" /><input type="checkbox" name="test[]" value="test3" /></nextform-collection>'
         );

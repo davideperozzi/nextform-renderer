@@ -146,7 +146,8 @@ class NodeBuffer
      * @param boolean $ignore
      * @return self
      */
-    public function ignore($selector, $ignore = true) {
+    public function ignore($selector, $ignore = true)
+    {
         $chunks = $this->get($selector);
 
         foreach ($chunks as $chunk) {

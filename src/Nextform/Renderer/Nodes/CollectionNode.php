@@ -22,14 +22,18 @@ class CollectionNode extends AbstractNode
     /**
      * @return NodeChunk
      */
-    public function render() {
+    public function render()
+    {
         $chunk = parent::render();
 
         if ($this->hasAttribute('name')) {
             $name = $this->getAttribute('name');
             $element = sprintf(
                 '<%s data-name="%s">%s</%s>',
-                self::COLLECTION_TAG, $name, '%s', self::COLLECTION_TAG
+                self::COLLECTION_TAG,
+                $name,
+                '%s',
+                self::COLLECTION_TAG
             );
 
             $chunk->wrap($element);
