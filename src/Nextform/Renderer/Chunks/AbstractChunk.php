@@ -42,6 +42,10 @@ abstract class AbstractChunk implements Traversable
      */
     protected $children = [];
 
+    /**
+     * @var boolean
+     */
+    protected $ignore = false;
 
     public function __construct()
     {
@@ -119,9 +123,22 @@ abstract class AbstractChunk implements Traversable
      */
     public function get()
     {
+        if (true == $this->ignore) {
+            return '';
+        }
+
         return htmlspecialchars_decode(
             str_replace(self::CHILDREN_VAR, $this->children(), $this->content)
         );
+    }
+
+    /**
+     * @param boolean $ignore
+     * @return self
+     */
+    public function ignore($ignore)
+    {
+        $this->ignore = $ignore;
     }
 
     /**

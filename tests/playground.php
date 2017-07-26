@@ -29,7 +29,7 @@ $config = new XmlConfig('
 				</errors>
 			</validation>
 		</textarea>
-		<collection name="test" array="[]">
+		<collection name="test">
 			<input type="checkbox" name="test" value="test1"/>
 			<input type="checkbox" name="test" value="test2"/>
 			<input type="checkbox" name="test" value="test3"/>

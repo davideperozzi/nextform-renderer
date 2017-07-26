@@ -183,4 +183,39 @@ class RenderTest extends TestCase
             );
         });
     }
+
+    public function testCollectionRendering()
+    {
+       $renderer = new Renderer(new XmlConfig('
+            <form>
+                <collection name="test">
+                    <input type="checkbox" name="test[]" value="test1"/>
+                    <input type="checkbox" name="test[]" value="test2"/>
+                    <input type="checkbox" name="test[]" value="test3"/>
+                </collection>
+            </form>
+        ', true));
+
+       $this->assertEquals(
+            $renderer->render()->test->get(),
+            '<nextform-collection data-name="test"><input type="checkbox" name="test[]" value="test1" /><input type="checkbox" name="test[]" value="test2" /><input type="checkbox" name="test[]" value="test3" /></nextform-collection>'
+        );
+    }
+
+    public function testIgnoreChunkRendering()
+    {
+        $output = $this->getOutput();
+
+        $output->firstname->ignore(true);
+        $this->assertEquals($output->firstname->get(), '');
+
+        $output->firstname->ignore(false);
+        $this->assertNotEquals($output->firstname->get(), '');
+
+        $output->ignore(['firstname']);
+        $this->assertEquals($output->firstname->get(), '');
+
+        $output->ignore(['firstname'], false);
+        $this->assertNotEquals($output->firstname->get(), '');
+    }
 }

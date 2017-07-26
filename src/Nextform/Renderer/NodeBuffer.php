@@ -21,7 +21,7 @@ class NodeBuffer
     /**
      * @var AbstractChunk
      */
-    private $root = null;
+    public $root = null;
 
     /**
      * @var array
@@ -120,10 +120,9 @@ class NodeBuffer
 
     /**
      * @param array $selector
-     * @param boolean $group
-     * @return array
+     * @return ChunkCollection
      */
-    public function get($selector, $group = false)
+    public function get($selector)
     {
         $collection = new ChunkCollection();
 
@@ -140,6 +139,21 @@ class NodeBuffer
         }
 
         return $collection;
+    }
+
+    /**
+     * @param array $selector
+     * @param boolean $ignore
+     * @return self
+     */
+    public function ignore($selector, $ignore = true) {
+        $chunks = $this->get($selector);
+
+        foreach ($chunks as $chunk) {
+            $chunk->ignore($ignore);
+        }
+
+        return $this;
     }
 
     /**
