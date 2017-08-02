@@ -29,7 +29,9 @@ class NodeChunk extends AbstractChunk
      */
     public function wrap($content, $beneath = false, $overrideChildren = false)
     {
-        if (true == $beneath && false == $this->node::$allowChildren) {
+        $nodeClass = get_class($this->node);
+
+        if (true == $beneath && false == $nodeClass::$allowChildren) {
             throw new Exception\ChunkChildrenNotSupported(
                 'This chunk does not support children. Wrapping beneath is not possible.'
             );
