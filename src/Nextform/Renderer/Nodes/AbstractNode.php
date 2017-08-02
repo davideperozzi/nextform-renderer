@@ -27,7 +27,12 @@ abstract class AbstractNode implements Traversable
     /**
      * @var boolean
      */
-    public static $short = true;
+    public static $allowShort = true;
+
+    /**
+     * @var boolean
+     */
+    public static $allowChildren = true;
 
     /**
      * @var string
@@ -119,7 +124,7 @@ abstract class AbstractNode implements Traversable
     /**
      * @return string
      */
-    public function getAttributeList()
+    public function getAttributeString()
     {
         $content = '';
 
@@ -151,13 +156,13 @@ abstract class AbstractNode implements Traversable
                 $tagName = $fieldClass::$tag;
             }
 
-            if (static::$short && count($this->children) == 0 && empty($fieldContent)) {
-                $output .= sprintf('<%s %s />', $tagName, $this->getAttributeList());
+            if (static::$allowShort && count($this->children) == 0 && empty($fieldContent)) {
+                $output .= sprintf('<%s %s />', $tagName, $this->getAttributeString());
             } else {
                 $output .= sprintf(
                     '<%s %s>%s</%s>',
                     $tagName,
-                    $this->getAttributeList(),
+                    $this->getAttributeString(),
                     $content . NodeChunk::CHILDREN_VAR,
                     $tagName
                 );

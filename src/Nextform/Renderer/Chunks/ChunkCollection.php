@@ -62,12 +62,12 @@ class ChunkCollection implements Traversable
     /**
      * @return string
      */
-    public function get()
+    public function render()
     {
         $content = '';
 
         foreach ($this->chunks as $chunk) {
-            $content .= $chunk->get();
+            $content .= $chunk->render();
         }
 
         return $content;

@@ -121,7 +121,7 @@ abstract class AbstractChunk implements Traversable
     /**
      * @return string
      */
-    public function get()
+    public function render()
     {
         if (true == $this->ignore) {
             return '';
@@ -158,15 +158,17 @@ abstract class AbstractChunk implements Traversable
 
     /**
      * @param string $content
+     * @param boolean $beneath
+     * @param boolean $overrideChildren
      * @throws Exception\NoChunkContentFound
      * @return self
      */
-    public function wrap($content)
+    public function wrap($content, $beneath = false, $overrideChildren = false)
     {
         $contentActive = preg_match('/' . self::CONTENT_VAR . '/', $content);
         $sprintfActive = preg_match('/%s/', $content);
 
-        if ( ! $contentActive && ! $sprintfActive) {
+        if ( ! $contentActive && ! $sprintfActive && ! $overrideChildren) {
             throw new Exception\NoChunkContentFound(
                 'You need to define the place in which the content will be rendered'
             );
@@ -174,14 +176,30 @@ abstract class AbstractChunk implements Traversable
 
         $replaceContent = htmlspecialchars($content);
 
-        if ($contentActive) {
+        if (true == $beneath) {
+            $searchStr = '%s';
+
+            if ($contentActive) {
+                $searchStr = self::CONTENT_VAR;
+            }
+
+            $replaceContent = str_replace($searchStr, self::CHILDREN_VAR, $replaceContent);
             $this->content = str_replace(
-                self::CONTENT_VAR,
-                $this->content,
-                $replaceContent
+                self::CHILDREN_VAR,
+                $replaceContent,
+                $this->content
             );
-        } elseif ($sprintfActive) {
-            $this->content = sprintf($replaceContent, $this->content);
+        }
+        else {
+            if ($contentActive) {
+                $this->content = str_replace(
+                    self::CONTENT_VAR,
+                    $this->content,
+                    $replaceContent
+                );
+            } elseif ($sprintfActive) {
+                $this->content = sprintf($replaceContent, $this->content);
+            }
         }
 
         return $this;
@@ -210,7 +228,7 @@ abstract class AbstractChunk implements Traversable
         $content = '';
 
         foreach ($this->children as $child) {
-            $content .= $child->get();
+            $content .= $child->render();
         }
 
         return $content;

@@ -22,4 +22,18 @@ class NodeChunk extends AbstractChunk
         $this->node = $node;
         $this->id = $node->id;
     }
+
+    /**
+     * {@inheritDoc}
+     * @throws Exception\NoChunkContentFound
+     */
+    public function wrap($content, $beneath = false, $overrideChildren = false) {
+        if (true == $beneath && false == $this->node::$allowChildren) {
+            throw new Exception\ChunkChildrenNotSupported(
+                'This chunk does not support children. Wrapping beneath is not possible.'
+            );
+        }
+
+        return parent::wrap($content, $beneath, $overrideChildren);
+    }
 }

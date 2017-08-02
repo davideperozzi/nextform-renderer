@@ -113,14 +113,14 @@ class RenderTest extends TestCase
         $output->firstname->wrap('<div class="wrap">%s</div>');
 
         $this->assertEquals(
-            $output->firstname->get(),
+            $output->firstname->render(),
             '<div class="wrap"><input type="text" name="firstname" /></div>'
         );
 
         $output->firstname->wrap('<div class="wrap2">%s</div>');
 
         $this->assertEquals(
-            $output->firstname->get(),
+            $output->firstname->render(),
             '<div class="wrap2"><div class="wrap"><input type="text" name="firstname" /></div></div>'
         );
     }
@@ -158,7 +158,7 @@ class RenderTest extends TestCase
             ['firstname', 'lastname']
         ])->each(function ($chunk) {
             $this->assertEquals(
-                $chunk->get(),
+                $chunk->render(),
                 '<div class="group"><input type="text" name="firstname" /><input type="text" name="lastname" /></div>'
             );
         });
@@ -178,7 +178,7 @@ class RenderTest extends TestCase
             ['firstname', 'lastname']
         ])->each(function ($chunk) {
             $this->assertEquals(
-                $chunk->get(),
+                $chunk->render(),
                 '<div><input type="text" name="firstname" /><input type="text" name="lastname" /></div>'
             );
         });
@@ -197,7 +197,7 @@ class RenderTest extends TestCase
         ', true));
 
         $this->assertEquals(
-            $renderer->render()->test->get(),
+            $renderer->render()->test->render(),
             '<nextform-collection data-name="test"><input type="checkbox" name="test[]" value="test1" /><input type="checkbox" name="test[]" value="test2" /><input type="checkbox" name="test[]" value="test3" /></nextform-collection>'
         );
     }
@@ -207,15 +207,29 @@ class RenderTest extends TestCase
         $output = $this->getOutput();
 
         $output->firstname->ignore(true);
-        $this->assertEquals($output->firstname->get(), '');
+        $this->assertEquals($output->firstname->render(), '');
 
         $output->firstname->ignore(false);
-        $this->assertNotEquals($output->firstname->get(), '');
+        $this->assertNotEquals($output->firstname->render(), '');
 
         $output->ignore(['firstname']);
-        $this->assertEquals($output->firstname->get(), '');
+        $this->assertEquals($output->firstname->render(), '');
 
         $output->ignore(['firstname'], false);
-        $this->assertNotEquals($output->firstname->get(), '');
+        $this->assertNotEquals($output->firstname->render(), '');
+    }
+
+    public function testTemplateStringRendering()
+    {
+        $output = $this->getOutput();
+        $output->template('
+            <div class="firstname-wrapper">{{field:firstname}}</div>
+            <div class="lastname-wrapper">{{field:firstname}}</div>
+        ');
+
+        $this->assertEquals($output, '<form name="sample" action="test.php" novalidate="true">
+            <div class="firstname-wrapper"><input type="text" name="firstname" /></div>
+            <div class="lastname-wrapper"><input type="text" name="firstname" /></div>
+        </form>');
     }
 }

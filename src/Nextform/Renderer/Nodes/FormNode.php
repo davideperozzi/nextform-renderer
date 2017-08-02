@@ -13,4 +13,9 @@ class FormNode extends AbstractNode
      * @var string
      */
     public static $tag = 'form';
+
+    /**
+     * @var boolean
+     */
+    public static $allowShort = false;
 }

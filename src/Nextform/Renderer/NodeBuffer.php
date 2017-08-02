@@ -34,6 +34,11 @@ class NodeBuffer
     private $encoding = 'utf8';
 
     /**
+     * @var string
+     */
+    private $template = '';
+
+    /**
      * @param AbstractChunk $root
      */
     public function __construct(AbstractChunk $root)
@@ -88,6 +93,22 @@ class NodeBuffer
 
         if (is_callable($callback)) {
             $callback($group, AbstractChunk::CONTENT_VAR);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param string $strOrFile
+     * @return self
+     */
+    public function template($strOrFile)
+    {
+        if (is_file($strOrFile)) {
+            $this->template = file_get_contents($strOrFile);
+        }
+        else {
+            $this->template = $strOrFile;
         }
 
         return $this;
@@ -177,7 +198,31 @@ class NodeBuffer
      */
     public function __toString()
     {
-        $output = $this->root->get();
+        if ( ! empty($this->template)) {
+            $parsedTemplate = $this->template;
+            $varSearch = '{{field:%s}}';
+
+            preg_match_all('/' . sprintf($varSearch, '(.*?)') . '/', $this->template, $matches);
+
+            foreach ($matches[1] as $varName) {
+                $fields = $this->get($varName);
+                $parsedTemplate = str_replace(
+                    sprintf($varSearch, $varName),
+                    $fields->render(),
+                    $parsedTemplate
+                );
+            }
+
+            try {
+                $this->root->wrap($parsedTemplate, true, true);
+            }
+            catch (\Exception $exc) {
+                trigger_error($exc, E_USER_ERROR);
+                return '';
+            }
+        }
+
+        $output = $this->root->render();
 
         if ( ! empty($this->tidy)) {
             if ( ! class_exists('\tidy')) {

@@ -12,5 +12,5 @@ class OptionNode extends AbstractNode
     /**
      * @var boolean
      */
-    public static $short = false;
+    public static $allowShort = false;
 }
