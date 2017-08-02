@@ -106,8 +106,7 @@ class NodeBuffer
     {
         if (is_file($strOrFile)) {
             $this->template = file_get_contents($strOrFile);
-        }
-        else {
+        } else {
             $this->template = $strOrFile;
         }
 
@@ -215,8 +214,7 @@ class NodeBuffer
 
             try {
                 $this->root->wrap($parsedTemplate, true, true);
-            }
-            catch (\Exception $exc) {
+            } catch (\Exception $exc) {
                 trigger_error($exc, E_USER_ERROR);
                 return '';
             }

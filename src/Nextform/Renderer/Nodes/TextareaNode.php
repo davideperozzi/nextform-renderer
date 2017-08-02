@@ -9,9 +9,9 @@ class TextareaNode extends AbstractNode
      */
     public static $tags = ['textarea'];
 
-     /**
-     * @var boolean
-     */
+    /**
+    * @var boolean
+    */
     public static $allowChildren = false;
 
     /**

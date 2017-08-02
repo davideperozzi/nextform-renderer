@@ -27,7 +27,8 @@ class NodeChunk extends AbstractChunk
      * {@inheritDoc}
      * @throws Exception\NoChunkContentFound
      */
-    public function wrap($content, $beneath = false, $overrideChildren = false) {
+    public function wrap($content, $beneath = false, $overrideChildren = false)
+    {
         if (true == $beneath && false == $this->node::$allowChildren) {
             throw new Exception\ChunkChildrenNotSupported(
                 'This chunk does not support children. Wrapping beneath is not possible.'

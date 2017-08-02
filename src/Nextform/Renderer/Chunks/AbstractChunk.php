@@ -189,8 +189,7 @@ abstract class AbstractChunk implements Traversable
                 $replaceContent,
                 $this->content
             );
-        }
-        else {
+        } else {
             if ($contentActive) {
                 $this->content = str_replace(
                     self::CONTENT_VAR,

@@ -147,7 +147,7 @@ $template = '
 ';
 
 $output->price->wrap('<div class="option-wrapper">%s</div>', true);
-$output->template($template)->each(function($chunk){
+$output->template($template)->each(function ($chunk) {
     $chunk->wrap('<div class="input-wrapper">%s</div>');
 });
 
