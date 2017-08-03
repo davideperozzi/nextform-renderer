@@ -40,14 +40,14 @@ abstract class AbstractNode implements Traversable
     public $id = '';
 
     /**
+     * @var AbstractField
+     */
+    public $field = null;
+
+    /**
      * @var array
      */
     protected $children = [];
-
-    /**
-     * @var AbstractField
-     */
-    protected $field = null;
 
     /**
      * @param AbstractField $field
@@ -136,11 +136,22 @@ abstract class AbstractNode implements Traversable
     }
 
     /**
-     * @return NodeChunk
+     * @param NodeChunk $chunk
+     * @return self
      */
-    public function render()
+    public function update(NodeChunk $chunk) {
+        $chunk->set($this->content());
+
+        foreach ($chunk->getChildren() as $child) {
+            $child->node->update($child);
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function content()
     {
-        $chunk = new NodeChunk($this);
         $content = $this->field->getContent();
         $output = '';
 
@@ -156,7 +167,7 @@ abstract class AbstractNode implements Traversable
                 $tagName = $fieldClass::$tag;
             }
 
-            if (static::$allowShort && count($this->children) == 0 && empty($fieldContent)) {
+            if (static::$allowShort && count($this->children) == 0) {
                 $output .= sprintf('<%s %s />', $tagName, $this->getAttributeString());
             } else {
                 $output .= sprintf(
@@ -168,6 +179,17 @@ abstract class AbstractNode implements Traversable
                 );
             }
         }
+
+        return $output;
+    }
+
+    /**
+     * @return NodeChunk
+     */
+    public function render()
+    {
+        $chunk = new NodeChunk($this);
+        $output = $this->content();
 
         $chunk->set($output);
 

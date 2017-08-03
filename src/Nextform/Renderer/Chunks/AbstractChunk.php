@@ -38,6 +38,11 @@ abstract class AbstractChunk implements Traversable
     protected $content = self::CHILDREN_VAR;
 
     /**
+     * @var boolean
+     */
+    protected $contentInjected = false;
+
+    /**
      * @var array
      */
     protected $children = [];
@@ -46,6 +51,11 @@ abstract class AbstractChunk implements Traversable
      * @var boolean
      */
     protected $ignore = false;
+
+    /**
+     * @var array
+     */
+    protected $wrapStates = [];
 
     public function __construct()
     {
@@ -127,8 +137,10 @@ abstract class AbstractChunk implements Traversable
             return '';
         }
 
+        $content = $this->applyWrap($this->content);
+
         return htmlspecialchars_decode(
-            str_replace(self::CHILDREN_VAR, $this->children(), $this->content)
+            str_replace(self::CHILDREN_VAR, $this->children(), $content)
         );
     }
 
@@ -158,6 +170,53 @@ abstract class AbstractChunk implements Traversable
 
     /**
      * @param string $content
+     * @return string
+     */
+    private function applyWrap($content)
+    {
+        foreach ($this->wrapStates as $state) {
+            $contentActive = preg_match('/' . self::CONTENT_VAR . '/', $state->content);
+            $sprintfActive = preg_match('/%s/', $state->content);
+
+            if ( ! $contentActive && ! $sprintfActive && ! $state->overrideChildren) {
+                throw new Exception\NoChunkContentFound(
+                    'You need to define the place in which the content will be rendered'
+                );
+            }
+
+            $replaceContent = htmlspecialchars($state->content);
+
+            if (true == $state->beneath) {
+                $searchStr = '%s';
+
+                if ($contentActive) {
+                    $searchStr = self::CONTENT_VAR;
+                }
+
+                $replaceContent = str_replace($searchStr, self::CHILDREN_VAR, $replaceContent);
+                $content = str_replace(
+                    self::CHILDREN_VAR,
+                    $replaceContent,
+                    $content
+                );
+            } else {
+                if ($contentActive) {
+                    $content = str_replace(
+                        self::CONTENT_VAR,
+                        $content,
+                        $replaceContent
+                    );
+                } elseif ($sprintfActive) {
+                    $content = sprintf($replaceContent, $content);
+                }
+            }
+        }
+
+        return $content;
+    }
+
+    /**
+     * @param string $content
      * @param boolean $beneath
      * @param boolean $overrideChildren
      * @throws Exception\NoChunkContentFound
@@ -165,41 +224,11 @@ abstract class AbstractChunk implements Traversable
      */
     public function wrap($content, $beneath = false, $overrideChildren = false)
     {
-        $contentActive = preg_match('/' . self::CONTENT_VAR . '/', $content);
-        $sprintfActive = preg_match('/%s/', $content);
-
-        if ( ! $contentActive && ! $sprintfActive && ! $overrideChildren) {
-            throw new Exception\NoChunkContentFound(
-                'You need to define the place in which the content will be rendered'
-            );
-        }
-
-        $replaceContent = htmlspecialchars($content);
-
-        if (true == $beneath) {
-            $searchStr = '%s';
-
-            if ($contentActive) {
-                $searchStr = self::CONTENT_VAR;
-            }
-
-            $replaceContent = str_replace($searchStr, self::CHILDREN_VAR, $replaceContent);
-            $this->content = str_replace(
-                self::CHILDREN_VAR,
-                $replaceContent,
-                $this->content
-            );
-        } else {
-            if ($contentActive) {
-                $this->content = str_replace(
-                    self::CONTENT_VAR,
-                    $this->content,
-                    $replaceContent
-                );
-            } elseif ($sprintfActive) {
-                $this->content = sprintf($replaceContent, $this->content);
-            }
-        }
+        $this->wrapStates[] = new Models\WrapStateModel(
+            $content,
+            $beneath,
+            $overrideChildren
+        );
 
         return $this;
     }
@@ -231,5 +260,13 @@ abstract class AbstractChunk implements Traversable
         }
 
         return $content;
+    }
+
+    /**
+     * @return array
+     */
+    public function getChildren()
+    {
+        return $this->children;
     }
 }

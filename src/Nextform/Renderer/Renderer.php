@@ -124,7 +124,6 @@ class Renderer
         return null;
     }
 
-
     private function createNodes()
     {
         foreach ($this->config->getFields() as $field) {

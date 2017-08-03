@@ -148,6 +148,7 @@ $template = '
 
 $output->price->wrap('<div class="option-wrapper">%s</div>', true);
 $output->template($template)->each(function ($chunk) {
+    $chunk->node->setAttribute('test', 1);
     $chunk->wrap('<div class="input-wrapper">%s</div>');
 });
 
