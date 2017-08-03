@@ -22,7 +22,7 @@ class NodeChunk extends AbstractChunk
         $this->node = $node;
         $this->id = $node->id;
 
-        $this->node->field->onChange(function(){
+        $this->node->field->onChange(function () {
             $this->node->update($this);
         });
     }

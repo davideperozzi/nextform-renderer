@@ -25,7 +25,8 @@ class WrapStateModel
      * @param boolean beneath
      * @param boolean $overrideChildren
      */
-    public function __construct($content, $beneath, $overrideChildren) {
+    public function __construct($content, $beneath, $overrideChildren)
+    {
         $this->content = $content;
         $this->beneath = $beneath;
         $this->overrideChildren = $overrideChildren;

@@ -139,7 +139,8 @@ abstract class AbstractNode implements Traversable
      * @param NodeChunk $chunk
      * @return self
      */
-    public function update(NodeChunk $chunk) {
+    public function update(NodeChunk $chunk)
+    {
         $chunk->set($this->content());
 
         foreach ($chunk->getChildren() as $child) {
