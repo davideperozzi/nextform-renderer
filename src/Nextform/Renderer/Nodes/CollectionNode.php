@@ -5,19 +5,14 @@ namespace Nextform\Renderer\Nodes;
 class CollectionNode extends AbstractNode
 {
     /**
-     * @var string
-     */
-    const COLLECTION_TAG = 'nextform-collection';
-
-    /**
      * @var array
      */
     public static $tags = ['collection'];
 
     /**
-     * @var boolean
+     * @var [type]
      */
-    public static $ignoreSelf = true;
+    public static $tag = 'nextform-collection';
 
     /**
      * @return NodeChunk
@@ -27,16 +22,9 @@ class CollectionNode extends AbstractNode
         $chunk = parent::render();
 
         if ($this->hasAttribute('name')) {
-            $name = $this->getAttribute('name');
-            $element = sprintf(
-                '<%s data-name="%s">%s</%s>',
-                self::COLLECTION_TAG,
-                $name,
-                '%s',
-                self::COLLECTION_TAG
-            );
-
-            $chunk->wrap($element);
+            // Transform to valid HTML
+            $this->setAttribute('data-name', $this->getAttribute('name'));
+            $this->removeAttribute('name');
         }
 
         return $chunk;

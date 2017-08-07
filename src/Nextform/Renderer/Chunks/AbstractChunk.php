@@ -62,6 +62,11 @@ abstract class AbstractChunk implements Traversable
      */
     protected $frontend = false;
 
+    /**
+     * @var array
+     */
+    private $frontendChangeCallbacks = [];
+
     public function __construct()
     {
         if ( ! empty($this->id)) {
@@ -244,6 +249,12 @@ abstract class AbstractChunk implements Traversable
      */
     public function setFrontend($enabled, $recursive = false)
     {
+        if ($this->frontend != $enabled) {
+            foreach ($this->frontendChangeCallbacks as $callback) {
+                $callback($enabled);
+            }
+        }
+
         $this->frontend = $enabled;
 
         if (true == $recursive) {
@@ -288,5 +299,22 @@ abstract class AbstractChunk implements Traversable
     public function getChildren()
     {
         return $this->children;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isFrontend()
+    {
+        return $this->frontend;
+    }
+
+    /**
+     * @param callable $callback
+     * @return self
+     */
+    public function onFrontendChange(callable $callback)
+    {
+        $this->frontendChangeCallbacks[] = $callback;
     }
 }

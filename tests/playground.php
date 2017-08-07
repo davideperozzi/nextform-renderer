@@ -33,6 +33,12 @@ $config = new XmlConfig('
 			<input type="checkbox" name="test" value="test1"/>
 			<input type="checkbox" name="test" value="test2"/>
 			<input type="checkbox" name="test" value="test3"/>
+            <validation required="true">
+                <modifiers required-min="5"></modifiers>
+                <errors>
+                    <required>This field is required</required>
+                </errors>
+            </validation>
 		</collection>
 		<select name="price">
 			<options>
@@ -146,6 +152,7 @@ $template = '
     <div class="form-inner-wrapper">
         <div>{{field:lastname}}</div>
         <div>{{field:firstname}}</div>
+        <div>{{field:test}}</div>
     </div>
 ';
 

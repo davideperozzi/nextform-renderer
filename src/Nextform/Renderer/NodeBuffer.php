@@ -26,6 +26,15 @@ class NodeBuffer
     /**
      * @var array
      */
+    private $config = [
+        'frontend' => false,
+        'encoding' => 'utf8',
+        'tidy' => []
+    ];
+
+    /**
+     * @var array
+     */
     private $tidy = [];
 
     /**
@@ -37,11 +46,6 @@ class NodeBuffer
      * @var string
      */
     private $template = '';
-
-    /**
-     * @var boolean
-     */
-    private $frontend = false;
 
     /**
      * @param AbstractChunk $root
@@ -57,19 +61,11 @@ class NodeBuffer
      */
     public function config($config = [])
     {
-        $config = array_merge([
-            'frontend' => false,
-            'encoding' => 'utf8',
-            'tidy' => []
-        ], $config);
-
-        if ($config['frontend'] != $this->frontend) {
+        if ($config['frontend'] != $this->config['frontend']) {
             $this->root->setFrontend($config['frontend'], true);
         }
 
-        $this->tidy = $config['tidy'];
-        $this->frontend = $config['frontend'];
-        $this->encoding = $config['encoding'];
+        $this->config = array_merge($this->config, $config);
 
         return $this;
     }
@@ -239,7 +235,7 @@ class NodeBuffer
 
         $output = $this->root->render();
 
-        if ( ! empty($this->tidy)) {
+        if ( ! empty($this->config['tidy'])) {
             if ( ! class_exists('\tidy')) {
                 throw new Exception\TidyNotFoundException('PHP tidy extension is not installed');
             }
@@ -247,8 +243,8 @@ class NodeBuffer
             $tidy = new \tidy;
             $tidy->parseString(
                 $output,
-                array_merge(['show-body-only' => true], $this->tidy),
-                $this->encoding
+                array_merge(['show-body-only' => true], $this->config['tidy']),
+                $this->config['encoding']
             );
             $tidy->cleanRepair();
 

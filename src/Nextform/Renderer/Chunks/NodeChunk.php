@@ -34,16 +34,18 @@ class NodeChunk extends AbstractChunk
     {
         parent::setFrontend($enabled, $recursive);
 
-        if (true == $this->frontend) {
-            $validations = $this->node->field->getValidation();
+        $validations = $this->node->field->getValidation();
 
+        if (true == $this->frontend) {
             foreach ($validations as $model) {
                 $this->node->field->setAttribute('data-validator-' . $model->name, $model->value);
                 $this->node->field->setAttribute('data-error-' . $model->name, $model->error);
             }
+        } else {
+            foreach ($validations as $model) {
+                $this->node->field->removeAttribute('data-validator-' . $model->name);
+                $this->node->field->removeAttribute('data-error-' . $model->name);
+            }
         }
-
-        // @todo: Remove frontend validation attributes.
-        // This needs the removeAttribute method implemented in the field.
     }
 }
