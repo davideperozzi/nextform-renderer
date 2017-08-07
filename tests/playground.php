@@ -59,11 +59,14 @@ $config = new XmlConfig('
 
 $renderer = new Renderer($config);
 $output = $renderer->render()->config([
-    'indent' => true,
-    'indent-spaces' => 4,
-    'wrap' => 400,
-    'input-xml' => true,
-    'output-xhtml' => true
+    'frontend' => true,
+    'tidy' => [
+        'indent' => true,
+        'indent-spaces' => 4,
+        'wrap' => 400,
+        'input-xml' => true,
+        'output-xhtml' => true
+    ]
 ]);
 
 // $output->each(function ($chunk, $content) {

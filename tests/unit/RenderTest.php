@@ -232,4 +232,11 @@ class RenderTest extends TestCase
             <div class="lastname-wrapper"><input type="text" name="firstname" /></div>
         </form>');
     }
+
+    public function testFrontendChunkRendering()
+    {
+        $output = $this->getOutput()->config(['frontend' => true]);
+
+        $this->assertEquals($output->firstname->render(), '<input type="text" name="firstname" data-validator-required="true" data-error-required="This field is required" data-validator-minlength="3" data-error-minlength="Too short. 3 characters at least" />');
+    }
 }

@@ -57,6 +57,11 @@ abstract class AbstractChunk implements Traversable
      */
     protected $wrapStates = [];
 
+    /**
+     * @var boolean
+     */
+    protected $frontend = false;
+
     public function __construct()
     {
         if ( ! empty($this->id)) {
@@ -231,6 +236,21 @@ abstract class AbstractChunk implements Traversable
         );
 
         return $this;
+    }
+
+    /**
+     * @param boolean $enabled
+     * @param boolean $recursive
+     */
+    public function setFrontend($enabled, $recursive = false)
+    {
+        $this->frontend = $enabled;
+
+        if (true == $recursive) {
+            foreach ($this->children as $child) {
+                $child->setFrontend($enabled, $recursive);
+            }
+        }
     }
 
     /**

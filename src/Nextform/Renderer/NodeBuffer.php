@@ -39,6 +39,11 @@ class NodeBuffer
     private $template = '';
 
     /**
+     * @var boolean
+     */
+    private $frontend = false;
+
+    /**
      * @param AbstractChunk $root
      */
     public function __construct(AbstractChunk $root)
@@ -47,12 +52,24 @@ class NodeBuffer
     }
 
     /**
+     * @param array
      * @return self
      */
-    public function config($tidy = [], $encoding = 'utf8')
+    public function config($config = [])
     {
-        $this->tidy = $tidy;
-        $this->encoding = $encoding;
+        $config = array_merge([
+            'frontend' => false,
+            'encoding' => 'utf8',
+            'tidy' => []
+        ], $config);
+
+        if ($config['frontend'] != $this->frontend) {
+            $this->root->setFrontend($config['frontend'], true);
+        }
+
+        $this->tidy = $config['tidy'];
+        $this->frontend = $config['frontend'];
+        $this->encoding = $config['encoding'];
 
         return $this;
     }
