@@ -168,13 +168,19 @@ abstract class AbstractNode implements Traversable
                 $tagName = $fieldClass::$tag;
             }
 
+            $attributeStr = $this->getAttributeString();
+
+            if ( ! empty($attributeStr)) {
+                $attributeStr = ' ' . $attributeStr;
+            }
+
             if (static::$allowShort && count($this->children) == 0) {
-                $output .= sprintf('<%s %s />', $tagName, $this->getAttributeString());
+                $output .= sprintf('<%s%s />', $tagName, $attributeStr);
             } else {
                 $output .= sprintf(
-                    '<%s %s>%s</%s>',
+                    '<%s%s>%s</%s>',
                     $tagName,
-                    $this->getAttributeString(),
+                    $attributeStr,
                     $content . NodeChunk::CHILDREN_VAR,
                     $tagName
                 );

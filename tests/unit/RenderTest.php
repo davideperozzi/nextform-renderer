@@ -3,6 +3,7 @@
 namespace Nextform\Parser\Tests;
 
 use Nextform\Config\XmlConfig;
+use Nextform\Fields\InputField;
 use Nextform\Renderer\Chunks\NodeChunk;
 use Nextform\Renderer\NodeBuffer;
 use Nextform\Renderer\Nodes\InputNode;
@@ -242,5 +243,30 @@ class RenderTest extends TestCase
         $output->config(['frontend' => false]);
 
         $this->assertEquals($output->firstname->render(), '<input type="text" name="firstname" />');
+    }
+
+    public function testGhostInputRendering()
+    {
+        $config = new XmlConfig('
+            <form>
+                <input type="text" name="test" />
+            </form>
+        ', true);
+
+        $ghostInput = new InputField();
+        $ghostInput->setAttribute('name', 'ghost');
+        $ghostInput->setGhost(true);
+
+        $config->addField($ghostInput);
+
+        $renderer = new Renderer($config);
+        $output = $renderer->render();
+
+        $output->each(function($chunk){
+            $chunk->wrap('<div>%s</div>');
+        });
+
+        $this->assertEquals($output,
+            '<form><input name="ghost" /><div><input type="text" name="test" /></div></form>');
     }
 }

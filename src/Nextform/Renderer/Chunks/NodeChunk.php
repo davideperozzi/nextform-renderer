@@ -30,6 +30,32 @@ class NodeChunk extends AbstractChunk
     /**
      * {@inheritDoc}
      */
+    public function wrap($content, $beneath = false, $overrideChildren = false)
+    {
+        // Do not wrap ghost fields
+        if ( ! $this->node->field->isGhost()) {
+            return parent::wrap($content, $beneath, $overrideChildren);
+        }
+
+        return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function add(AbstractChunk $chunk, $index = -1)
+    {
+        // Insert ghost chunks always first
+        if ($chunk instanceof NodeChunk && $chunk->node->field->isGhost()) {
+            $index = 0;
+        }
+
+        parent::add($chunk, $index);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function setFrontend($enabled, $recursive = false)
     {
         parent::setFrontend($enabled, $recursive);
