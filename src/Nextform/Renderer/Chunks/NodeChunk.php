@@ -46,7 +46,7 @@ class NodeChunk extends AbstractChunk
     public function add(AbstractChunk $chunk, $index = -1)
     {
         // Insert ghost chunks always first
-        if ($chunk instanceof NodeChunk && $chunk->node->field->isGhost()) {
+        if ($chunk instanceof self && $chunk->node->field->isGhost()) {
             $index = 0;
         }
 

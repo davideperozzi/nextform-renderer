@@ -262,11 +262,13 @@ class RenderTest extends TestCase
         $renderer = new Renderer($config);
         $output = $renderer->render();
 
-        $output->each(function($chunk){
+        $output->each(function ($chunk) {
             $chunk->wrap('<div>%s</div>');
         });
 
-        $this->assertEquals($output,
-            '<form><input name="ghost" /><div><input type="text" name="test" /></div></form>');
+        $this->assertEquals(
+            $output,
+            '<form><input name="ghost" /><div><input type="text" name="test" /></div></form>'
+        );
     }
 }
