@@ -3,6 +3,7 @@
 require realpath(__DIR__ . '/../vendor/autoload.php');
 
 use Nextform\Config\XmlConfig;
+use Nextform\Fields\InputField;
 use Nextform\Renderer\Renderer;
 
 $config = new XmlConfig('
@@ -62,6 +63,12 @@ $config = new XmlConfig('
 	</form>
 ', true);
 
+
+$ghostField = new InputField();
+$ghostField->setAttribute('name', 'ghost');
+$ghostField->setGhost(true);
+
+$config->addField($ghostField);
 
 $renderer = new Renderer($config);
 $output = $renderer->render()->config([
@@ -146,7 +153,6 @@ $output = $renderer->render()->config([
 // echo '<pre>';
 
 // print_r($_GET);
-
 
 $template = '
     <div class="form-inner-wrapper">

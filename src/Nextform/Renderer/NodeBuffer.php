@@ -5,6 +5,7 @@ namespace Nextform\Renderer;
 use Nextform\Renderer\Chunks\AbstractChunk;
 use Nextform\Renderer\Chunks\ChunkCollection;
 use Nextform\Renderer\Chunks\GroupChunk;
+use Nextform\Renderer\Chunks\NodeChunk;
 
 class NodeBuffer
 {
@@ -224,6 +225,13 @@ class NodeBuffer
                     $parsedTemplate
                 );
             }
+
+            $ghostElements = $this->each(function ($chunk) use (&$parsedTemplate) {
+                if ($chunk instanceof NodeChunk &&
+                    $chunk->node->field->isGhost()) {
+                    $parsedTemplate = $chunk->render() . $parsedTemplate;
+                }
+            });
 
             try {
                 $this->root->wrap($parsedTemplate, true, true);
