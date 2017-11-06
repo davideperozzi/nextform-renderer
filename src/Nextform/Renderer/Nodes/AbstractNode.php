@@ -134,12 +134,10 @@ abstract class AbstractNode implements Traversable
 
                 if (json_last_error() == JSON_ERROR_NONE && $jsonObj instanceof \stdClass) {
                     $content .= ' ' . sprintf("%s='%s'", $name, json_encode($jsonObj));
-                }
-                else {
+                } else {
                     $content .= ' ' . sprintf('%s="%s"', $name, $value);
                 }
-            }
-            else {
+            } else {
                 $content .= ' ' . sprintf('%s="%s"', $name, $value);
             }
         }

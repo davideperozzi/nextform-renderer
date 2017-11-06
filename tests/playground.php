@@ -3,7 +3,6 @@
 require realpath(__DIR__ . '/../vendor/autoload.php');
 
 use Nextform\Config\XmlConfig;
-use Nextform\Fields\InputField;
 use Nextform\Renderer\Renderer;
 use Symfony\Component\Yaml\Yaml;
 

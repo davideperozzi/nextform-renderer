@@ -20,7 +20,7 @@
         "brainmaestro/composer-git-hooks": "^2.2"
     },
     "require": {
-        "davideperozzi/nextform-config": "^1.0",
+        "davideperozzi/nextform-config": "dev-dev",
         "symfony/yaml": "^3.3"
     },
     "extra": {

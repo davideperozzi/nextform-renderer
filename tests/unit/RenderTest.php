@@ -272,7 +272,8 @@ class RenderTest extends TestCase
         );
     }
 
-    public function testJsonAttributeRendering() {
+    public function testJsonAttributeRendering()
+    {
         $renderer = new Renderer(
             new XmlConfig('
                 <form>
