@@ -62,7 +62,8 @@ class NodeBuffer
      */
     public function config($config = [])
     {
-        if ($config['frontend'] != $this->config['frontend']) {
+        if (array_key_exists('frontend', $config) &&
+            $config['frontend'] != $this->config['frontend']) {
             $this->root->setFrontend($config['frontend'], true);
         }
 

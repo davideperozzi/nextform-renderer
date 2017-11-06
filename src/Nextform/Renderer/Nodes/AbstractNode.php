@@ -129,7 +129,19 @@ abstract class AbstractNode implements Traversable
         $content = '';
 
         foreach ($this->field->getAttributes() as $name => $value) {
-            $content .= ' ' . sprintf('%s="%s"', $name, $value);
+            if (substr(trim($value), 0, 1) == '{') {
+                $jsonObj = json_decode($value);
+
+                if (json_last_error() == JSON_ERROR_NONE && $jsonObj instanceof \stdClass) {
+                    $content .= ' ' . sprintf("%s='%s'", $name, json_encode($jsonObj));
+                }
+                else {
+                    $content .= ' ' . sprintf('%s="%s"', $name, $value);
+                }
+            }
+            else {
+                $content .= ' ' . sprintf('%s="%s"', $name, $value);
+            }
         }
 
         return trim($content);

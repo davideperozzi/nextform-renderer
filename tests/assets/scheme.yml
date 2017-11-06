@@ -1,0 +1,14 @@
+root:
+  wrappers:
+    simple-input:
+      templates:
+        - <div class="input-wrapper">%s</div>
+      conditions:
+        function:
+          - test_chunk
+        node:
+          - input
+          - textarea
+        attributes:
+          type:
+            - text

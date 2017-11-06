@@ -271,4 +271,19 @@ class RenderTest extends TestCase
             '<form><input name="ghost" /><div><input type="text" name="test" /></div></form>'
         );
     }
+
+    public function testJsonAttributeRendering() {
+        $renderer = new Renderer(
+            new XmlConfig('
+                <form>
+                    <input type="text" name="test" data-json=\'{"test":"test"}\' />
+                </form>
+            ', true)
+        );
+
+        $output = $renderer->render();
+
+        $this->assertEquals($output->test->node->getAttribute('data-json'), '{"test":"test"}');
+        $this->assertEquals($output->test->render(), '<input type="text" name="test" data-json=\'{"test":"test"}\' />');
+    }
 }
