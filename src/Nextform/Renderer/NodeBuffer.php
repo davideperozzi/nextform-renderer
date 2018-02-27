@@ -154,6 +154,21 @@ class NodeBuffer
     }
 
     /**
+     * @param string $name
+     * @return AbstractChunk
+     */
+    public function chunk($name)
+    {
+        if ($chunk = $this->root->{$name}) {
+            return $chunk;
+        }
+
+        throw new Exception\ChunkNotFoundException(
+            sprintf('Chunk with id "%s" not found', $name)
+        );
+    }
+
+    /**
      * @param array $selector
      * @return ChunkCollection
      */
@@ -198,13 +213,7 @@ class NodeBuffer
      */
     public function __get($name)
     {
-        if ($chunk = $this->root->{$name}) {
-            return $chunk;
-        }
-
-        throw new Exception\ChunkNotFoundException(
-            sprintf('Chunk with id "%s" not found', $name)
-        );
+        return $this->chunk($name);
     }
 
     /**
