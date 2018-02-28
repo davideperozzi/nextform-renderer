@@ -169,6 +169,23 @@ class NodeBuffer
     }
 
     /**
+     * @return array
+     */
+    public function ghosts()
+    {
+        $collection = new ChunkCollection();
+
+        $this->each(function ($chunk) use (&$collection) {
+            if ($chunk instanceof NodeChunk &&
+                $chunk->node->field->isGhost()) {
+                $collection->add($chunk);
+            }
+        });
+
+        return $collection;
+    }
+
+    /**
      * @param array $selector
      * @return ChunkCollection
      */
